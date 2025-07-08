@@ -22,6 +22,11 @@ class InstalmentRate(models.Model):
         ]
 
     def deactivate_at_month_end(self):
+        """
+        Set deactivated_at field at the end of the current month
+        Returns:
+            None
+        """
         today = date.today()
         last_day = monthrange(today.year, today.month)[1]
         self.deactivated_at = date(today.year, today.month, last_day)
@@ -29,6 +34,11 @@ class InstalmentRate(models.Model):
 
     @classmethod
     def get_instalment_rate(cls, month=None):
+        """
+        Find out the instalment of the current month or a specific month
+        Returns:
+            Queryset
+        """
         if month is None:
             # get current:
             # deactivate date is none or greater than or eql current date

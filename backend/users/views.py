@@ -6,12 +6,18 @@ from .serializers import MemberCreateSerializer, MemberSerializer, PasswordUpdat
 
 
 class MemberCreateView(generics.CreateAPIView):
+    """
+    To create a new member account (Only by admin user)
+    """
     serializer_class = MemberCreateSerializer
     permission_classes = [IsAdminUser]
 
 
 # List Of Members
 class MemberList(generics.ListAPIView):
+    """
+    List of all members (Only by admin user).
+    """
     serializer_class = MemberSerializer
     permission_classes = [IsAdminUser]
 
@@ -20,6 +26,9 @@ class MemberList(generics.ListAPIView):
 
 
 class PasswordChangeView(generics.UpdateAPIView):
+    """
+    Update individuals own password.
+    """
     serializer_class = PasswordUpdateSerializer
     permission_classes = [IsAuthenticated]
 

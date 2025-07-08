@@ -9,16 +9,20 @@ from .utils import next_month_date, today_date
 
 
 class NewInstalmentRate(generics.CreateAPIView):
+    """
+    Allows admin to create a new instalment rate.
+
+    - If a current active instalment exists, it is deactivated by setting its deactivated_at
+      to the end of the current month.
+    - The new instalment becomes active either from today or the next month, depending on the scenario.
+    """
     permission_classes = [IsAdminUser]
     serializer_class = InstalmentRateSerializer
 
     def perform_create(self, serializer):
-        # Atomic
         with transaction.atomic():
             current_instalment_rate = InstalmentRate.get_instalment_rate()
-            # If current rate available
             if current_instalment_rate:
-                # Set a deactivate date for that at the end of this month
                 current_instalment_rate.deactivate_at_month_end()
                 activation_date = next_month_date()
             else:
@@ -28,6 +32,9 @@ class NewInstalmentRate(generics.CreateAPIView):
 
 # Get current instalment
 class CurrentInstalment(APIView):
+    """
+    Returns the currently active instalment rate.
+    """
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -38,6 +45,9 @@ class CurrentInstalment(APIView):
 
 # Installment history
 class InstalmentHistory(generics.ListAPIView):
+    """
+    Returns the list of past and current instalment rates (history) up to today.
+    """
     permission_classes = [IsAuthenticated]
     serializer_class = InstalmentHistorySerializer
     queryset = InstalmentRate.objects.filter(activation_date__lte=today_date())
