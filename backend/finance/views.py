@@ -30,7 +30,6 @@ class NewInstalmentRate(generics.CreateAPIView):
             serializer.save(created_by=self.request.user, activation_date=activation_date)
 
 
-# Get current instalment
 class CurrentInstalment(APIView):
     """
     Returns the currently active instalment rate.
@@ -43,7 +42,6 @@ class CurrentInstalment(APIView):
         return Response(serializer.data)
 
 
-# Installment history
 class InstalmentHistory(generics.ListAPIView):
     """
     Returns the list of past and current instalment rates (history) up to today.
